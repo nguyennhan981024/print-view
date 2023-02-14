@@ -1,0 +1,18 @@
+.home-page-wrapper {
+  width : 100%;
+  height : 100%;
+  padding: 16px;
+  .table-list-wrapper {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 20px 30px;
+    padding: 15px;
+    .table-item-wrapper {
+      border: 1px solid #4b4848;
+      padding: 10px 15px;
+      font-size: 8px;
+    }
+  }
+}
