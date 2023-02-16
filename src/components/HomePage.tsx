@@ -1,12 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Header from "./Header";
 import InputDocumentModal from "./InputDocumentModal";
 import TableItem from "./TableItem";
 import styles from "../styles/Home.module.scss";
-import { Button } from "@chakra-ui/react";
 import { DocumentType } from "../types";
-interface HomePageProps {}
-const HomePage = (props: HomePageProps) => {
+const HomePage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [documentGroup, setDocumentGroup] = useState<DocumentType[]>([]);
   const handleClose = () => {
@@ -23,13 +21,28 @@ const HomePage = (props: HomePageProps) => {
       };
       documentGroupList.push(tableItem);
     }
-    setDocumentGroup(documentGroupList);
+    const oddArray: DocumentType[] = [];
+    const eventArray: DocumentType[] = [];
+    documentGroupList.forEach((item, index) => {
+      if (index % 2 === 0) {
+        oddArray.push(item);
+      } else {
+        eventArray.push(item);
+      }
+    });
+    const copyEvent = [...eventArray.reverse()];
+    for (let i = 0; i < copyEvent.length; i += 3) {
+      const chunk = copyEvent.splice(i, 3);
+      copyEvent.push(...chunk);
+    }
+    setDocumentGroup(oddArray.concat(copyEvent));
     handleClose();
   };
+
   const handlePrepareDocument = (document: string) => {
     const listDocument = document
       .split("\n")
-      .map((doc) => doc.replace(/([^\w]+)/, ": "));
+      .map((doc) => doc.replace(/([^\w]+)/, " : "));
     prepareChunkList(listDocument);
   };
   return (
@@ -41,11 +54,12 @@ const HomePage = (props: HomePageProps) => {
         handlePrepareDocument={handlePrepareDocument}
       />
       <div className={styles["table-list-wrapper"]}>
-        {documentGroup.map((doc) => (
-          <Fragment key={doc.id}>
-            <TableItem documentData={doc} />
-          </Fragment>
-        ))}
+        {documentGroup &&
+          documentGroup.map((doc) => (
+            <Fragment key={doc.id}>
+              <TableItem documentData={doc} />
+            </Fragment>
+          ))}
       </div>
     </div>
   );

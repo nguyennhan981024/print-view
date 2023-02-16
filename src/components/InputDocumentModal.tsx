@@ -24,7 +24,7 @@ const InputDocumentModal = ({
 }: InputDocumentModalProps) => {
   const [document, setDocument] = useState<string>("");
   const handleChange = (event: any) => {
-    setDocument(event.target.value);
+    setDocument(event.target.value.replace(/\n+/g, "\n"));
   };
   return (
     <Modal isOpen={isOpen} onClose={handleClose} closeOnEsc={true} size="2xl">
