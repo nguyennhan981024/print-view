@@ -7,7 +7,6 @@ interface TableItemProps {
   documentData: DocumentType;
 }
 const TableItem = ({ documentData }: TableItemProps) => {
-  const modifyData = documentData.data.map((item) => {});
   return (
     <div className={styles["table-item-wrapper"]}>
       <List>
