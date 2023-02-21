@@ -79,12 +79,14 @@ const HomePage = () => {
       />
       {documentGroup && documentGroup?.length > 0 ? (
         <Fragment>
-          <Alert status="success">
-            <AlertIcon />
-            Having fun drag and drop by holding mouse on element and move
-            between them to matching with your expectation then click export
-            document button to print 😜😎
-          </Alert>
+          <div className={styles["no-document-text"]}>
+            <Alert status="success">
+              <AlertIcon />
+              Having fun drag and drop by holding mouse on element and move
+              between them to matching with your expectation then click export
+              document button to print 😜😎
+            </Alert>
+          </div>
           <ResponsiveGridLayout
             className={`${styles["table-list-wrapper"]} ${styles["layout"]}`}
             layouts={{ lg: layout }}
