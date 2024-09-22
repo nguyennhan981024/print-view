@@ -93,7 +93,7 @@ const HomePage = () => {
             onLayoutChange={onLayoutChange}
             isDraggable={true}
             isResizable={false}
-            cols={{ lg: 6, md: 3, sm: 3 }}
+            breakpoints={{ lg: 6, md: 3, sm: 3 }}
             autoSize={true}
             rowHeight={100}
             verticalCompact={false}
