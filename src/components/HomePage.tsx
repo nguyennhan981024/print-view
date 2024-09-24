@@ -3,7 +3,7 @@ import Header from "./Header";
 import InputDocumentModal from "./InputDocumentModal";
 import TableItem from "./TableItem";
 import styles from "../styles/Home.module.scss";
-import { DocumentType } from "../types";
+import {DocumentPayloadType, DocumentType} from "../types";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -44,10 +44,33 @@ const HomePage = () => {
     handleClose();
   };
 
-  const handlePrepareDocument = (document: string) => {
-    const listDocument = document
+  const handlePrepareDocument = (payload: DocumentPayloadType) => {
+    let listDocumentInitial:string[] = payload.document
       .split("\n")
-      .map((doc) => doc.replace(/([^\w]+)/, " : "));
+    // reset listdocument initial case timetable
+    if(listDocumentInitial?.length < 20 && payload?.isLoopOver && payload?.numberOfItems) {
+      for(let i = listDocumentInitial?.length; i < 20; i++) {
+        listDocumentInitial.push('')
+      }
+    }
+    let listDocument:string[] = [...listDocumentInitial]
+    // Check case iterate over number of item
+    if(payload?.isLoopOver && payload?.numberOfItems) {
+      for(let i = 1; i <= payload?.numberOfItems; i++) {
+       listDocument = listDocument.concat(listDocumentInitial)
+      }
+    }
+    // check case have no number
+    if(!payload?.isAutoImportNumber) {
+      listDocument = listDocument.map((doc) => doc.replace(/([^\w]+)/, ": "));
+    } else {
+      let index = 0
+      listDocument = listDocument.map((doc: string) => {
+        index += 1;
+        if(index > 20) index = 1
+        return `${index}: ` + doc
+      });
+    }
     prepareChunkList(listDocument);
   };
   const [layout, setLayout] = useState<any>([]);
@@ -68,7 +91,6 @@ const HomePage = () => {
     const y = Math.floor(index / 4) * 3;
     return { x, y, w: 1, h: 3 };
   };
-  console.log("layout", layout);
   return (
     <div className={styles["home-page-wrapper"]}>
       <Header setIsOpen={setIsOpen} />
@@ -87,25 +109,27 @@ const HomePage = () => {
               document button to print 😜😎
             </Alert>
           </div>
-          <ResponsiveGridLayout
-            className={`${styles["table-list-wrapper"]} ${styles["layout"]}`}
-            layouts={{ lg: layout }}
-            onLayoutChange={onLayoutChange}
-            isDraggable={true}
-            isResizable={false}
-            breakpoints={{ lg: 6, md: 3, sm: 3 }}
-            autoSize={true}
-            rowHeight={100}
-            verticalCompact={false}
-            onDrop={handleDrop}
-          >
+          {/*<ResponsiveGridLayout*/}
+          {/*  className={`${styles["table-list-wrapper"]} ${styles["layout"]}`}*/}
+          {/*  layouts={{ lg: layout }}*/}
+          {/*  onLayoutChange={onLayoutChange}*/}
+          {/*  isDraggable={true}*/}
+          {/*  isResizable={false}*/}
+          {/*  breakpoints={{ lg: 3, md: 6, sm: 3 }}*/}
+          {/*  autoSize={true}*/}
+          {/*  rowHeight={100}*/}
+          {/*  verticalCompact={false}*/}
+          {/*  onDrop={handleDrop}*/}
+          {/*>*/}
+          <div className={`${styles["table-list-wrapper"]} ${styles["layout"]}`}>
             {documentGroup &&
-              documentGroup.map((doc, index) => (
-                <div key={doc.id} data-grid={getItemLayout(index)}>
-                  <TableItem documentData={doc} />
-                </div>
-              ))}
-          </ResponsiveGridLayout>
+                documentGroup.map((doc, index) => (
+                    <div key={doc.id} data-grid={getItemLayout(index)}>
+                      <TableItem documentData={doc} />
+                    </div>
+                ))}
+          </div>
+          {/*</ResponsiveGridLayout>*/}
         </Fragment>
       ) : (
         <div className={styles["no-document-text"]}>
